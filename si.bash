@@ -5,13 +5,16 @@ __vsc_command_available() {
 }
 
 __vsc_escape_value_fast1() {
-    builtin local out
+    builtin local out LC_ALL=C length
     # -An removes line number
     # -v do not use * to mark line suppression
     # -tx1 prints each byte as two-digit hex
-    # tr -d '\n' concats all output lines
-    out=$(od -An -vtx1 <<<"$1")
-    out=${out//[[:space:]]/\\x}
+    # tr -d '\n' concats all output lines    
+    out=$(od -An -vtx1 <<<"$1"|tr -s '[:space:]' ' ')
+    length=${#out}
+    out=${out:0:length-1}
+    out=${out// /\\x}
+    # out=$(sed 's/\s+/\\x/g' <<<${out})
     # <<<"$1" prepends a trailing newline already, so we don't need to printf '%s\n'
     builtin printf '%s' "${out}"
 }
