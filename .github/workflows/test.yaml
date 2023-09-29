@@ -1,0 +1,21 @@
+name: Test __vsc_escape_value
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  Run-on-Ubuntu:
+    name: ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: /bin/bash si.bash
+
+  Run-on-MacOS:
+    name: macos
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: /bin/bash si.bash
