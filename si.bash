@@ -41,7 +41,10 @@ __vsc_escape_value2() {
     fi
 }
 
-content=$(for _ in $(seq 1 2100); do printf "\u$_"; done)
+content=$(for i in $(seq 1 2010); do
+    j=$(printf "%x" $(($i % 254 + 1)))
+    printf "\x${j}"
+done)
 
 time __vsc_escape_value1 "${content}"
 time __vsc_escape_value2 "${content}"
