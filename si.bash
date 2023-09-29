@@ -46,5 +46,7 @@ content=$(for i in $(seq 1 2010); do
     printf "\x${j}"
 done)
 
+time od -An -vtx1 <<<"$content"
+
 time __vsc_escape_value1 "${content}"
 time __vsc_escape_value2 "${content}"
