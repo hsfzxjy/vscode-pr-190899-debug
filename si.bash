@@ -10,8 +10,8 @@ __vsc_escape_value_fast1() {
     # -v do not use * to mark line suppression
     # -tx1 prints each byte as two-digit hex
     # tr -d '\n' concats all output lines
-    out=$(od -An -vtx1 <<<"$1" | tr -d '\n')
-    out=${out// /\\x}
+    out=$(od -An -vtx1 <<<"$1")
+    out=${out//[[:space:]]/\\x}
     # <<<"$1" prepends a trailing newline already, so we don't need to printf '%s\n'
     builtin printf '%s' "${out}"
 }
