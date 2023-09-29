@@ -9,12 +9,13 @@ __vsc_escape_value_fast1() {
     # -An removes line number
     # -v do not use * to mark line suppression
     # -tx1 prints each byte as two-digit hex
-    # tr -d '\n' concats all output lines    
-    out=$(od -An -vtx1 <<<"$1"|tr -s '[:space:]' ' ')
+    # tr -d '\n' concats all output lines
+    out=$(od -An -vtx1 <<<"$1" | tr -s '[:space:]' ' ')
+    # strip the last newline
     length=${#out}
     out=${out:0:length-1}
+
     out=${out// /\\x}
-    # out=$(sed 's/\s+/\\x/g' <<<${out})
     # <<<"$1" prepends a trailing newline already, so we don't need to printf '%s\n'
     builtin printf '%s' "${out}"
 }
@@ -44,12 +45,20 @@ __vsc_escape_value2() {
     fi
 }
 
-content=$(for i in $(seq 1 2010); do
-    j=$(printf "%x" $(($i % 254 + 1)))
-    printf "\x${j}"
-done)
+make_sample() {
+    builtin local i j
+    for i in $(seq 1 $1); do
+        j=$(printf "%x" $(($i % 254 + 1)))
+        printf "\x${j}"
+    done
+}
 
-time od -An -vtx1 <<<"$content"
 
+
+content=$(make_sample 2010)
+time __vsc_escape_value1 "${content}"
+time __vsc_escape_value2 "${content}"
+
+content=$(make_sample 6000)
 time __vsc_escape_value1 "${content}"
 time __vsc_escape_value2 "${content}"
